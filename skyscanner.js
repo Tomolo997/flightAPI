@@ -5,7 +5,7 @@ var unirest = require('unirest');
 var req = unirest(
   'GET',
 
-  'http://partners.api.skyscanner.net/apiservices/browseroutes/v1.0/FR/eur/en-US/VCE-sky/PMO-sky/2021/2021?apikey=prtl6749387986743898559646983194'
+  'http://partners.api.skyscanner.net/apiservices/browseroutes/v1.0/FR/eur/en-US/LJU-sky/MIL-sky/2021/2021?apikey=prtl6749387986743898559646983194'
 );
 /*
 /browsequotes/v1.0/{country}/{currency}/{locale}/{originPlace}/{destinationPlace}/{outboundPartialDate}/{inboundPartialDate}
