@@ -1,17 +1,23 @@
 const dotenv = require('dotenv');
 dotenv.config({ path: './config.env' });
-const fetch = require('node-fetch');
 var cors = require('cors');
+
+//require different files
+const TranfromDateToSuitableLink = require('./utils/tranfromDate');
+const Flights = require('./models/FlightsModel');
 // create application/json parser
 const mongoose = require('mongoose');
 var unirest = require('unirest');
 //from France to US
-
+//express app
 const express = require('express');
 const app = express();
+
+//Express middleware
 app.use(express.json());
 app.use(cors());
 
+//mongoose connection of DATABASE
 mongoose
   .connect(process.env.DATABASE, {
     useNewUrlParser: true,
@@ -22,18 +28,10 @@ mongoose
   .then(() => {
     console.log('DB collection succesful');
   });
-//connect the mongodb
-
-function TranfromDateToSuitableLink(date) {
-  const slice = date.slice(2, 10).split('-').join('');
-
-  return slice;
-}
 
 //routes
 app.get('/country-to-country', async (req, res) => {
   const { from, to } = req.body;
-  console.log(req.body);
   var response = await unirest(
     'GET',
     `https://partners.api.skyscanner.net/apiservices/browseroutes/v1.0/SL/eur/en-US/${from}/${to}/anytime/anytime?apikey=prtl6749387986743898559646983194`
@@ -104,6 +102,16 @@ app.get('/city-to-anywhere', async (req, res) => {
     data: {
       data: response.body,
     },
+  });
+});
+
+app.post('/addFlight', async (req, res) => {
+  //create a new user with this statisics => zag,mia,from_date,to_date
+  const newFlight = await Flights.create(req.body);
+
+  res.status(200).json({
+    status: 'success',
+    flight: newFlight,
   });
 });
 

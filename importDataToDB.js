@@ -3,11 +3,18 @@ const mongoose = require('mongoose');
 //connect the mongodb
 
 //read JSON file
-const tours = JSON.parse(
-  fs.readFileSync(__dirname + '/tours-simple.json', 'utf-8')
-);
+mongoose
+  .connect(process.env.DATABASE, {
+    useNewUrlParser: true,
+    useCreateIndex: true,
+    useFindAndModify: false,
+    useUnifiedTopology: true,
+  })
+  .then(() => {
+    console.log('DB ul');
+  });
 //import data to database
-const importData = async () => {
+const importDataCountryToCountry = async () => {
   try {
     await Tour.create(tours);
     console.log('data succesfuly loaded!');
