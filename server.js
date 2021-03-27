@@ -5,6 +5,7 @@ var cors = require('cors');
 //require different files
 const TranfromDateToSuitableLink = require('./utils/tranfromDate');
 const Flights = require('./models/FlightsModel');
+const Users = require('./models/userModel');
 // create application/json parser
 const mongoose = require('mongoose');
 var unirest = require('unirest');
@@ -105,14 +106,41 @@ app.get('/city-to-anywhere', async (req, res) => {
   });
 });
 
-app.post('/addFlight', async (req, res) => {
-  //create a new user with this statisics => zag,mia,from_date,to_date
-  const newFlight = await Flights.create(req.body);
+//add a new user
+app.post('/signup', async (req, res) => {
+  try {
+    const newUser = await Users.create(req.body);
+    res.status(200).json({
+      status: 'success',
+      data: {
+        user: newUser,
+      },
+    });
+  } catch (error) {
+    console.log(error);
+  }
+});
 
-  res.status(200).json({
-    status: 'success',
-    flight: newFlight,
-  });
+app.post('/add-flight/:id', async (req, res) => {
+  try {
+    // 1) find the specific user
+    const User = await Users.findByIdAndUpdate(
+      req.params.id,
+      {
+        $push: { flights: req.body },
+      },
+      { new: true }
+    );
+
+    res.status(200).json({
+      status: 'success',
+      data: {
+        user: User,
+      },
+    });
+  } catch (error) {
+    console.log(error);
+  }
 });
 
 //start Server2021-03

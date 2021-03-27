@@ -30,7 +30,7 @@ const userSchema = mongoose.Schema({
       message: 'Passwords are not the same',
     },
   },
-  flights: { type: Array, default: [] },
+  flights: { type: Array },
 });
 
 /*
